@@ -373,7 +373,7 @@ else:
                 )
                 
                 # Display image
-                st.image(output_path, use_container_width=True)
+                st.image(output_path, use_column_width=True)
                 
                 # Download button
                 with open(output_path, "rb") as file:
