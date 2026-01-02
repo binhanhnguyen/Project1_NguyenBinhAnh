@@ -354,38 +354,72 @@ else:
         with col3:
             st.metric("Straight Distance", f"{result['straight_dist']:.1f} m")
         with col4:
-            detour_ratio = result['cost'] / result['straight_dist']
-            st.metric("Detour Ratio", f"{detour_ratio:.2f}x")
+            if result['straight_dist'] > 0:
+                detour_ratio = result['cost'] / result['straight_dist']
+                st.metric("Detour Ratio", f"{detour_ratio:.2f}x")
+            else:
+                st.metric("Detour Ratio", "N/A")
         
         # Visualization
-        st.subheader("🗺️ Route Visualization")
+        st.subheader("🗺️ Interactive Route Map")
         
-        with st.spinner("Generating map..."):
-            try:
-                # Create visualization
-                output_path = os.path.join(DATA_DIR, "temp_route.png")
-                plot_route_with_graph_or_simple(
-                    graph_data['paths']['graph'],
-                    graph_data['paths']['nodes'],
-                    graph_data['paths']['edges'],
-                    result['path'],
-                    output_path
-                )
-                
-                # Display image
-                st.image(output_path, use_column_width=True)
-                
-                # Download button
-                with open(output_path, "rb") as file:
-                    st.download_button(
-                        label="📥 Download Route Map",
-                        data=file,
-                        file_name="route_map.png",
-                        mime="image/png"
+        # Tabs for different visualizations
+        tab1, tab2 = st.tabs(["🌐 Interactive Map", "📊 Static Map"])
+        
+        with tab1:
+            with st.spinner("Generating interactive map..."):
+                try:
+                    from streamlit_folium import st_folium
+                    from visualize_map_interactive import create_interactive_map
+                    
+                    # Create interactive Folium map
+                    m = create_interactive_map(
+                        nodes=graph_data['nodes'],
+                        route=result['path'],
+                        start_coords=result['start_coords'],
+                        goal_coords=result['goal_coords'],
+                        route_distance=result['cost'],
+                        straight_distance=result['straight_dist']
                     )
-                
-            except Exception as e:
-                st.error(f"Visualization error: {e}")
+                    
+                    # Display interactive map
+                    st_folium(m, width=None, height=600)
+                    
+                    st.info("💡 **Tip:** Zoom in/out, click markers for details, switch map styles in top-right corner!")
+                    
+                except Exception as e:
+                    st.error(f"Interactive map error: {e}")
+                    st.info("Falling back to static map...")
+        
+        with tab2:
+            with st.spinner("Generating static map..."):
+                try:
+                    from visualize_map import plot_route_with_graph_or_simple
+                    
+                    # Create visualization
+                    output_path = os.path.join(DATA_DIR, "temp_route.png")
+                    plot_route_with_graph_or_simple(
+                        graph_data['paths']['graph'],
+                        graph_data['paths']['nodes'],
+                        graph_data['paths']['edges'],
+                        result['path'],
+                        output_path
+                    )
+                    
+                    # Display image
+                    st.image(output_path, width=None)
+                    
+                    # Download button
+                    with open(output_path, "rb") as file:
+                        st.download_button(
+                            label="📥 Download Route Map",
+                            data=file,
+                            file_name="route_map.png",
+                            mime="image/png"
+                        )
+                    
+                except Exception as e:
+                    st.error(f"Visualization error: {e}")
         
         # Path details
         with st.expander("🔍 View Path Details"):
