@@ -1,16 +1,17 @@
 # Bách Khoa Pathfinding System - Dependencies
-# Streamlit Cloud compatible (no system dependencies required)
+# Optimized for Streamlit Cloud with Python 3.11
 
 streamlit==1.30.0
 osmnx==1.9.2
-networkx==3.2.1
 geopandas==0.14.3
+pyproj==3.6.0
+shapely==2.0.2
+fiona==1.9.5
+networkx==3.2.1
 geopy==2.4.1
 matplotlib==3.8.2
 pandas==2.2.0
 numpy==1.26.3
 requests==2.31.0
-shapely==2.0.2
 scipy==1.12.0
-pyproj==3.6.1
 
