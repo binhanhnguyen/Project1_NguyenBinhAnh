@@ -1,0 +1,30 @@
+# Bách Khoa Pathfinding System - Dependencies
+# Generated: 2026-01-02
+
+# Core Web Framework
+streamlit==1.39.0
+
+# Geospatial & Graph Libraries
+osmnx==1.9.4
+networkx==3.3
+geopandas==0.14.4
+
+# Geocoding
+geopy==2.4.1
+
+# Visualization
+matplotlib==3.9.2
+
+# Data Processing
+pandas==2.2.2
+numpy==1.26.4
+
+# HTTP Requests (required by osmnx)
+requests==2.32.3
+
+# Shapely (required by osmnx/geopandas)
+shapely==2.0.4
+
+# Additional osmnx dependencies
+scipy==1.13.1
+
